@@ -4,25 +4,24 @@
 #
 Summary:	libenchant - generic spell checking library
 Summary(pl.UTF-8):	libenchant - ogólna biblioteka sprawdzania pisowni
-Name:		enchant
-Version:	1.6.0
-Release:	7
-License:	LGPL v2
+Name:		enchant2
+Version:	2.2.3
+Release:	1
+License:	LGPL v2+
 Group:		Libraries
-Source0:	http://www.abisource.com/downloads/enchant/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	de11011aff801dc61042828041fb59c7
-Patch0:		hunspell-1.4.patch
-URL:		http://www.abisource.com/enchant/
+Source0:	https://github.com/AbiWord/enchant/releases/download/v%{version}/enchant-%{version}.tar.gz
+# Source0-md5:	4b8abb58e00e93363591b3f5ea4f52d5
+URL:		https://github.com/AbiWord/enchant
 BuildRequires:	aspell-devel >= 2:0.50.0
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	dbus-glib-devel >= 0.62
 BuildRequires:	glib2-devel >= 1:2.12.0
 BuildRequires:	hspell-devel >= 0.9-3
+BuildRequires:	hunspell-devel
 BuildRequires:	libtool
 BuildRequires:	libvoikko-devel
 BuildRequires:	pkgconfig
-BuildRequires:	uspell-devel >= 1.1.0
 Requires:	glib2 >= 1:2.12.0
 Suggests:	%{name}-backend
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -32,7 +31,7 @@ This project aims to provide an efficient, extensible abstraction for
 dealing with different spell checking libraries. Enchant is meant to
 provide a generic interface into various existing spell checking
 libraries. These include, but are not limited to: Aspell/Pspell,
-Ispell, Hspell, Uspell.
+Hunspell, Hspell.
 
 Enchant is also meant to be used in a cross-platform environment. Part
 of this means that Enchant wants to limit its number of external
@@ -52,7 +51,7 @@ preference to the $USER resources, when found.
 Celem projektu jest dostarczenie wydajnej i rozszerzalnej abstrakcji
 do obsługi różnych bibliotek kontroli pisowni. Enchant ma dostarczać
 ogólny interfejs do różnych istniejących bibliotek. Obejmują one (ale
-nie są ograniczone do): Aspella/Pspella, Ispella, Hspella, Uspella.
+nie są ograniczone do): Aspella/Pspella, Hunspella, Hspella.
 
 Enchant ma być także używany w środowisku wieloplatformowym. Oznacza
 to między innymi, że Enchant ma mieć ograniczoną liczbę zewnętrznych
@@ -121,44 +120,18 @@ hspell provider module for Enchant.
 %description hspell -l pl.UTF-8
 Moduł obsługujący hspella dla Enchanta.
 
-%package ispell
-Summary:	ispell provider module for Enchant
-Summary(pl.UTF-8):	Moduł obsługujący ispella dla Enchanta
+%package hunspell
+Summary:	hunspell provider module for Enchant
+Summary(pl.UTF-8):	Moduł obsługujący hunspella dla Enchanta
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Provides:	%{name}-backend
 
-%description ispell
-ispell provider module for Enchant.
+%description hunspell
+hunspell provider module for Enchant.
 
-%description ispell -l pl.UTF-8
-Moduł obsługujący ispella dla Enchanta.
-
-%package myspell
-Summary:	myspell provider module for Enchant
-Summary(pl.UTF-8):	Moduł obsługujący myspella dla Enchanta
-Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-Provides:	%{name}-backend
-
-%description myspell
-myspell provider module for Enchant.
-
-%description myspell -l pl.UTF-8
-Moduł obsługujący myspella dla Enchanta.
-
-%package uspell
-Summary:	uspell provider module for Enchant
-Summary(pl.UTF-8):	Moduł obsługujący uspella dla Enchanta
-Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-Provides:	%{name}-backend
-
-%description uspell
-uspell provider module for Enchant.
-
-%description uspell -l pl.UTF-8
-Moduł obsługujący uspella dla Enchanta.
+%description hunspell -l pl.UTF-8
+Moduł obsługujący hunspella dla Enchanta.
 
 %package voikko
 Summary:	Voikko provider module for Enchant
@@ -188,34 +161,38 @@ Zemberek (Turkish) provider module for Enchant.
 Moduł obsługujący backend zemberek (turecki) dla Enchanta.
 
 %prep
-%setup -q
-%patch0 -p1
+%setup -q -n enchant-%{version}
 
 %build
 %{__libtoolize}
-%{__aclocal} -I ac-helpers
+%{__aclocal} -I m4
 %{__autoconf}
 %{__automake}
 export CFLAGS="%{rpmcflags} -fpermissive"
 export CXXFLAGS="%{rpmcxxflags} -fpermissive"
 %configure \
-	--disable-binreloc \
+	--enable-relocatable \
 	%{!?with_static_libs:--disable-static} \
-	--enable-zemberek \
-	--with-ispell-dir=/usr/%{_lib}/ispell \
-	--with-myspell-dir=/usr/share/myspell \
-	--with-uspell-dir=/usr/share/uspell
+	--with-aspell \
+	--with-hspell \
+	--with-zemberek \
+	--with-hunspell \
+	--with-hunspell-dir=/usr/share/myspell
 
-%{__make}
+%{__make} \
+	pkgdatadir=%{_datadir}/enchant-2
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+	DESTDIR=$RPM_BUILD_ROOT \
+	pkgdatadir=%{_datadir}/enchant-2
+
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 
 # useless - modules loaded through libgmodule
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/enchant/*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/enchant-2/*.{la,a}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -225,52 +202,44 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS MAINTAINERS NEWS README TODO
-%attr(755,root,root) %{_bindir}/enchant
-%attr(755,root,root) %{_bindir}/enchant-lsmod
-%attr(755,root,root) %{_libdir}/libenchant.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libenchant.so.1
-%dir %{_libdir}/enchant
-%{_datadir}/enchant
-%{_mandir}/man1/enchant.1*
+%doc AUTHORS HACKING NEWS README
+%attr(755,root,root) %{_bindir}/enchant-2
+%attr(755,root,root) %{_bindir}/enchant-lsmod-2
+%attr(755,root,root) %{_libdir}/libenchant-2.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libenchant-2.so.2
+%dir %{_libdir}/enchant-2
+%{_datadir}/enchant-2
+%{_mandir}/man1/enchant-2.1*
+%{_mandir}/man1/enchant-lsmod-2.1*
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libenchant.so
-%{_libdir}/libenchant.la
-%{_includedir}/enchant
-%{_pkgconfigdir}/enchant.pc
+%attr(755,root,root) %{_libdir}/libenchant-2.so
+%{_includedir}/enchant-2
+%{_pkgconfigdir}/enchant-2.pc
 
 %if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libenchant.a
+%{_libdir}/libenchant-2.a
 %endif
 
 %files aspell
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant/libenchant_aspell.so
+%attr(755,root,root) %{_libdir}/enchant-2/enchant_aspell.so
 
 %files hspell
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant/libenchant_hspell.so
+%attr(755,root,root) %{_libdir}/enchant-2/enchant_hspell.so
 
-%files ispell
+%files hunspell
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant/libenchant_ispell.so
-
-%files myspell
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant/libenchant_myspell.so
-
-%files uspell
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant/libenchant_uspell.so
+%attr(755,root,root) %{_libdir}/enchant-2/enchant_hunspell.so
 
 %files voikko
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant/libenchant_voikko.so
+%attr(755,root,root) %{_libdir}/enchant-2/enchant_voikko.so
 
 %files zemberek
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant/libenchant_zemberek.so
+%attr(755,root,root) %{_libdir}/enchant-2/enchant_zemberek.so
