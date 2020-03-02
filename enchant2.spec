@@ -5,22 +5,25 @@
 Summary:	libenchant - generic spell checking library
 Summary(pl.UTF-8):	libenchant - ogólna biblioteka sprawdzania pisowni
 Name:		enchant2
-Version:	2.2.7
+Version:	2.2.8
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	https://github.com/AbiWord/enchant/releases/download/v%{version}/enchant-%{version}.tar.gz
-# Source0-md5:	8a6ea1bb143c64e0edf5e49c7e7cb984
+# Source0-md5:	c7b9d6a392ecb8758e499f783e8dc883
+Patch0:		%{name}-link.patch
 URL:		https://github.com/AbiWord/enchant
 BuildRequires:	aspell-devel >= 2:0.50.0
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
 BuildRequires:	dbus-glib-devel >= 0.62
 BuildRequires:	glib2-devel >= 1:2.12.0
 BuildRequires:	hspell-devel >= 0.9-3
 BuildRequires:	hunspell-devel
-BuildRequires:	libtool
+BuildRequires:	libstdc++-devel >= 6:4.7
+BuildRequires:	libtool >= 2:2
 BuildRequires:	libvoikko-devel
+BuildRequires:	nuspell-devel
 BuildRequires:	pkgconfig
 Requires:	glib2 >= 1:2.12.0
 Suggests:	%{name}-backend
@@ -133,6 +136,19 @@ hunspell provider module for Enchant.
 %description hunspell -l pl.UTF-8
 Moduł obsługujący hunspella dla Enchanta.
 
+%package nuspell
+Summary:	nuspell provider module for Enchant
+Summary(pl.UTF-8):	Moduł obsługujący nuspella dla Enchanta
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Provides:	%{name}-backend
+
+%description nuspell
+nuspell provider module for Enchant.
+
+%description nuspell -l pl.UTF-8
+Moduł obsługujący nuspella dla Enchanta.
+
 %package voikko
 Summary:	Voikko provider module for Enchant
 Summary(pl.UTF-8):	Moduł obsługujący backend voikko dla Enchanta
@@ -162,22 +178,21 @@ Moduł obsługujący backend zemberek (turecki) dla Enchanta.
 
 %prep
 %setup -q -n enchant-%{version}
+%patch0 -p1
 
 %build
 %{__libtoolize}
 %{__aclocal} -I m4
 %{__autoconf}
 %{__automake}
-export CFLAGS="%{rpmcflags} -fpermissive"
-export CXXFLAGS="%{rpmcxxflags} -fpermissive"
 %configure \
-	--enable-relocatable \
 	%{!?with_static_libs:--disable-static} \
 	--with-aspell \
 	--with-hspell \
-	--with-zemberek \
 	--with-hunspell \
-	--with-hunspell-dir=/usr/share/myspell
+	--with-hunspell-dir=/usr/share/myspell \
+	--with-nuspell \
+	--with-zemberek
 
 %{__make} \
 	pkgdatadir=%{_datadir}/enchant-2
@@ -235,6 +250,10 @@ rm -rf $RPM_BUILD_ROOT
 %files hunspell
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/enchant-2/enchant_hunspell.so
+
+%files nuspell
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/enchant-2/enchant_nuspell.so
 
 %files voikko
 %defattr(644,root,root,755)
