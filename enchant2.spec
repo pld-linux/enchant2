@@ -207,7 +207,10 @@ rm -rf $RPM_BUILD_ROOT
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 
 # useless - modules loaded through libgmodule
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/enchant-2/*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/enchant-2/*.la
+%if %{with static_libs}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/enchant-2/*.a
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
