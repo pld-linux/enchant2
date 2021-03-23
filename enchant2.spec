@@ -1,17 +1,17 @@
 #
 # Conditional build:
-%bcond_without	static_libs	# don't build static library
+%bcond_without	static_libs	# static library
 #
 Summary:	libenchant - generic spell checking library
 Summary(pl.UTF-8):	libenchant - ogólna biblioteka sprawdzania pisowni
 Name:		enchant2
-Version:	2.2.11
+Version:	2.2.15
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 #Source0Download: https://github.com/AbiWord/enchant/releases
 Source0:	https://github.com/AbiWord/enchant/releases/download/v%{version}/enchant-%{version}.tar.gz
-# Source0-md5:	292633e58b1c829fd8705760e9e74718
+# Source0-md5:	9b27f815ee35ff12b5b870c2d04361c6
 Patch0:		%{name}-link.patch
 URL:		https://github.com/AbiWord/enchant
 BuildRequires:	aspell-devel >= 2:0.50.0
@@ -24,7 +24,7 @@ BuildRequires:	hunspell-devel
 BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libvoikko-devel
-BuildRequires:	nuspell-devel
+BuildRequires:	nuspell-devel >= 4.1.0
 BuildRequires:	pkgconfig
 Requires:	glib2 >= 1:2.12.0
 Suggests:	%{name}-backend
@@ -142,6 +142,7 @@ Summary:	nuspell provider module for Enchant
 Summary(pl.UTF-8):	Moduł obsługujący nuspella dla Enchanta
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	nuspell-libs >= 4.1.0
 Provides:	%{name}-backend
 
 %description nuspell
