@@ -5,13 +5,13 @@
 Summary:	libenchant - generic spell checking library
 Summary(pl.UTF-8):	libenchant - ogólna biblioteka sprawdzania pisowni
 Name:		enchant2
-Version:	2.3.1
-Release:	2
+Version:	2.3.2
+Release:	1
 License:	LGPL v2+
 Group:		Libraries
 #Source0Download: https://github.com/AbiWord/enchant/releases
 Source0:	https://github.com/AbiWord/enchant/releases/download/v%{version}/enchant-%{version}.tar.gz
-# Source0-md5:	0b9b60da3bf595ff07547c40668a7373
+# Source0-md5:	5a680a39c64c4ebb1bc02098cb5ed40b
 Patch0:		%{name}-link.patch
 URL:		https://github.com/AbiWord/enchant
 BuildRequires:	aspell-devel >= 2:0.50.0
