@@ -21,6 +21,7 @@ BuildRequires:	dbus-glib-devel >= 0.62
 BuildRequires:	glib2-devel >= 1:2.12.0
 BuildRequires:	hspell-devel >= 0.9-3
 BuildRequires:	hunspell-devel
+BuildRequires:	libltdl-devel
 BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libvoikko-devel
