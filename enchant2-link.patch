@@ -1,6 +1,6 @@
---- enchant-2.2.8/configure.ac.orig	2020-02-27 16:32:32.000000000 +0100
-+++ enchant-2.2.8/configure.ac	2020-03-01 21:32:41.372171295 +0100
-@@ -189,7 +189,7 @@
+--- enchant-2.5.0/configure.ac.orig	2023-05-24 11:23:45.000000000 +0200
++++ enchant-2.5.0/configure.ac	2023-07-24 19:59:56.784094186 +0200
+@@ -169,7 +169,7 @@ AC_DEFUN([ENCHANT_CHECK_LIB_PROVIDER],
        [_enchant_header=m4_default([$6], [$1[].h])
        AC_CHECK_HEADERS([$_enchant_header], [_header_found=yes], [_header_found=no], [])
        if test "$3" != NOLIB; then
@@ -9,17 +9,17 @@
        else
           ac_cv_lib_[]$1[]_[]$3=yes
        fi
-@@ -201,7 +201,10 @@
+@@ -181,7 +181,10 @@ AC_DEFUN([ENCHANT_CHECK_LIB_PROVIDER],
        else
           with_[]$1=yes
           build_providers="$build_providers $1"
 -         LIBS="$LIBS $5"
 +         if test "$3" != NOLIB; then
-+         $2[]_LIBS="-l$1 $5"
++            $2[]_LIBS="-l$1 $5"
 +         fi
 +         AC_SUBST($2[]_LIBS)
        fi])
-    AM_CONDITIONAL(WITH_[]$2, test "x$with_[]$1" = xyes)])
+    AM_CONDITIONAL(WITH_[]$2, test "$with_[]$1" = yes)])
  
 --- enchant-2.2.8/providers/Makefile.am.orig	2020-02-27 14:05:18.000000000 +0100
 +++ enchant-2.2.8/providers/Makefile.am	2020-03-01 21:34:09.391694452 +0100
