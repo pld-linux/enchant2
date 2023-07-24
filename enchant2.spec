@@ -19,6 +19,7 @@ BuildRequires:	autoconf >= 2.71
 BuildRequires:	automake
 BuildRequires:	dbus-glib-devel >= 0.62
 BuildRequires:	glib2-devel >= 1:2.12.0
+BuildRequires:	groff
 BuildRequires:	hspell-devel >= 0.9-3
 BuildRequires:	hunspell-devel
 BuildRequires:	libltdl-devel
