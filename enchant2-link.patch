@@ -1,15 +1,15 @@
---- enchant-2.5.0/configure.ac.orig	2023-05-24 11:23:45.000000000 +0200
-+++ enchant-2.5.0/configure.ac	2023-07-24 19:59:56.784094186 +0200
-@@ -169,7 +169,7 @@ AC_DEFUN([ENCHANT_CHECK_LIB_PROVIDER],
-       [_enchant_header=m4_default([$6], [$1[].h])
-       AC_CHECK_HEADERS([$_enchant_header], [_header_found=yes], [_header_found=no], [])
-       if test "$3" != NOLIB; then
+--- enchant-2.6.1/configure.ac.orig	2023-09-24 23:15:40.000000000 +0200
++++ enchant-2.6.1/configure.ac	2023-10-15 16:02:25.021151073 +0200
+@@ -181,7 +181,7 @@ AC_DEFUN([ENCHANT_CHECK_LIB_PROVIDER],
+   [ENCHANT_CHECK_PROVIDER_SETUP([$1], [$4])
+    AS_IF([test "$with_[]$1" != no],
+       [if test "$3" != NOLIB; then
 -         AC_CHECK_LIB([$1], [$3],,, [$5])
 +         AC_CHECK_LIB([$1], [$3],[:],, [$5])
        else
           ac_cv_lib_[]$1[]_[]$3=yes
        fi
-@@ -181,7 +181,10 @@ AC_DEFUN([ENCHANT_CHECK_LIB_PROVIDER],
+@@ -193,7 +193,10 @@ AC_DEFUN([ENCHANT_CHECK_LIB_PROVIDER],
        else
           with_[]$1=yes
           build_providers="$build_providers $1"
