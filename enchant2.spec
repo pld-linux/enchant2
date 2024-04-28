@@ -5,13 +5,13 @@
 Summary:	libenchant - generic spell checking library
 Summary(pl.UTF-8):	libenchant - ogólna biblioteka sprawdzania pisowni
 Name:		enchant2
-Version:	2.6.1
+Version:	2.6.9
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 #Source0Download: https://github.com/AbiWord/enchant/releases
 Source0:	https://github.com/AbiWord/enchant/releases/download/v%{version}/enchant-%{version}.tar.gz
-# Source0-md5:	b22bc2ce92f74456f40acc9ce87be1a9
+# Source0-md5:	2200119317326bce456a7c831376ca6a
 Patch0:		%{name}-link.patch
 URL:		https://github.com/AbiWord/enchant
 BuildRequires:	aspell-devel >= 2:0.50.0
@@ -28,6 +28,7 @@ BuildRequires:	libtool >= 2:2
 BuildRequires:	libvoikko-devel
 BuildRequires:	nuspell-devel >= 5.1.0
 BuildRequires:	pkgconfig
+BuildRequires:	rpm-build >= 4.6
 Requires:	glib2 >= 1:2.12.0
 Suggests:	%{name}-backend
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -98,6 +99,18 @@ Static enchant library.
 
 %description static -l pl.UTF-8
 Statyczna biblioteka enchant.
+
+%package apidocs
+Summary:	API documentation for Enchant 2 library
+Summary(pl.UTF-8):	Dokumentacja API biblioteki Enchant 2
+Group:		Documentation
+BuildArch:	noarch
+
+%description apidocs
+API documentation for Enchant 2 library.
+
+%description apidocs -l pl.UTF-8
+Dokumentacja API biblioteki Enchant 2.
 
 %package aspell
 Summary:	aspell provider module for Enchant
@@ -198,15 +211,13 @@ Moduł obsługujący backend zemberek (turecki) dla Enchanta.
 	--with-nuspell \
 	--with-zemberek
 
-%{__make} \
-	pkgdatadir=%{_datadir}/enchant-2
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT \
-	pkgdatadir=%{_datadir}/enchant-2
+	DESTDIR=$RPM_BUILD_ROOT
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 
@@ -215,6 +226,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with static_libs}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/enchant-2/*.a
 %endif
+# HTML version of man pages
+%{__rm} $RPM_BUILD_ROOT%{_docdir}/enchant/enchant*.html
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -246,6 +259,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libenchant-2.a
 %endif
+
+%files apidocs
+%defattr(644,root,root,755)
+%doc doxygen/html/{search,*.css,*.html,*.js,*.png}
 
 %files aspell
 %defattr(644,root,root,755)
