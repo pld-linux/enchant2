@@ -5,13 +5,13 @@
 Summary:	libenchant - generic spell checking library
 Summary(pl.UTF-8):	libenchant - ogólna biblioteka sprawdzania pisowni
 Name:		enchant2
-Version:	2.6.9
+Version:	2.8.2
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 #Source0Download: https://github.com/AbiWord/enchant/releases
 Source0:	https://github.com/AbiWord/enchant/releases/download/v%{version}/enchant-%{version}.tar.gz
-# Source0-md5:	2200119317326bce456a7c831376ca6a
+# Source0-md5:	92dcfe06febc92a3d4bbff4e08b08d3d
 Patch0:		%{name}-link.patch
 URL:		https://github.com/AbiWord/enchant
 BuildRequires:	aspell-devel >= 2:0.50.0
@@ -29,6 +29,8 @@ BuildRequires:	libvoikko-devel
 BuildRequires:	nuspell-devel >= 5.1.0
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
+# unittest-cpp >= 1.6 for tests
+BuildRequires:	vala >= 2:0.56.17
 Requires:	glib2 >= 1:2.12.0
 Suggests:	%{name}-backend
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -237,7 +239,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS HACKING NEWS README
+%doc AUTHORS HACKING NEWS README.md
 %attr(755,root,root) %{_bindir}/enchant-2
 %attr(755,root,root) %{_bindir}/enchant-lsmod-2
 %attr(755,root,root) %{_libdir}/libenchant-2.so.*.*.*
