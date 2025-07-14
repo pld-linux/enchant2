@@ -197,7 +197,7 @@ Moduł obsługujący backend zemberek (turecki) dla Enchanta.
 
 %prep
 %setup -q -n enchant-%{version}
-%patch0 -p1
+%patch -P0 -p1
 
 %build
 %{__libtoolize}
