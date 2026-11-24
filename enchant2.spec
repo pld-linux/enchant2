@@ -5,20 +5,20 @@
 Summary:	libenchant - generic spell checking library
 Summary(pl.UTF-8):	libenchant - ogólna biblioteka sprawdzania pisowni
 Name:		enchant2
-Version:	2.8.2
-Release:	3
+Version:	2.8.21
+Release:	1
 License:	LGPL v2+
 Group:		Libraries
 #Source0Download: https://github.com/AbiWord/enchant/releases
 Source0:	https://github.com/AbiWord/enchant/releases/download/v%{version}/enchant-%{version}.tar.gz
-# Source0-md5:	92dcfe06febc92a3d4bbff4e08b08d3d
-Patch0:		%{name}-link.patch
+# Source0-md5:	2ffd8790d4c0e33f05618193c468d6ff
+Patch0:		enchant-types.patch
 URL:		https://github.com/AbiWord/enchant
 BuildRequires:	aspell-devel >= 2:0.50.0
 BuildRequires:	autoconf >= 2.71
 BuildRequires:	automake
 BuildRequires:	dbus-glib-devel >= 0.62
-BuildRequires:	glib2-devel >= 1:2.12.0
+BuildRequires:	glib2-devel >= 1:2.76
 BuildRequires:	groff
 BuildRequires:	hspell-devel >= 0.9-3
 BuildRequires:	hunspell-devel
@@ -31,7 +31,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
 # unittest-cpp >= 1.6 for tests
 BuildRequires:	vala >= 2:0.56.17
-Requires:	glib2 >= 1:2.12.0
+Requires:	glib2%{?_isa} >= 1:2.76
 Suggests:	%{name}-backend
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -81,8 +81,8 @@ takie znajdzie.
 Summary:	Header files for enchant library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki enchant
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	glib2-devel >= 1:2.12.0
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+Requires:	glib2-devel%{?_isa} >= 1:2.76
 
 %description devel
 Header files for enchant library.
@@ -94,7 +94,7 @@ Pliki nagłówkowe biblioteki enchant.
 Summary:	Static enchant library
 Summary(pl.UTF-8):	Statyczna biblioteka enchant
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
 
 %description static
 Static enchant library.
@@ -118,8 +118,8 @@ Dokumentacja API biblioteki Enchant 2.
 Summary:	aspell provider module for Enchant
 Summary(pl.UTF-8):	Moduł obsługujący aspella dla Enchanta
 Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	aspell >= 2:0.50.0
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+Requires:	aspell%{?_isa} >= 2:0.50.0
 Provides:	%{name}-backend
 
 %description aspell
@@ -132,7 +132,7 @@ Moduł obsługujący aspella dla Enchanta.
 Summary:	hspell provider module for Enchant
 Summary(pl.UTF-8):	Moduł obsługujący hspella dla Enchanta
 Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 Provides:	%{name}-backend
 
 %description hspell
@@ -145,7 +145,7 @@ Moduł obsługujący hspella dla Enchanta.
 Summary:	hunspell provider module for Enchant
 Summary(pl.UTF-8):	Moduł obsługujący hunspella dla Enchanta
 Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 Provides:	%{name}-backend
 
 %description hunspell
@@ -158,8 +158,8 @@ Moduł obsługujący hunspella dla Enchanta.
 Summary:	nuspell provider module for Enchant
 Summary(pl.UTF-8):	Moduł obsługujący nuspella dla Enchanta
 Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	nuspell-libs >= 5.1.0
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+Requires:	nuspell-libs%{?_isa} >= 5.1.0
 Provides:	%{name}-backend
 
 %description nuspell
@@ -172,7 +172,7 @@ Moduł obsługujący nuspella dla Enchanta.
 Summary:	Voikko provider module for Enchant
 Summary(pl.UTF-8):	Moduł obsługujący backend voikko dla Enchanta
 Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 Provides:	%{name}-backend
 
 %description voikko
@@ -185,8 +185,8 @@ Moduł obsługujący backend voikko (fiński) dla Enchanta.
 Summary:	Zemberek provider module for Enchant
 Summary(pl.UTF-8):	Moduł obsługujący backend zemberek dla Enchanta
 Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	dbus-glib >= 0.62
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+Requires:	dbus-glib%{?_isa} >= 0.62
 Provides:	%{name}-backend
 
 %description zemberek
@@ -203,6 +203,7 @@ Moduł obsługujący backend zemberek (turecki) dla Enchanta.
 %{__libtoolize}
 %{__aclocal} -I m4
 %{__autoconf}
+%{__autoheader}
 %{__automake}
 %configure \
 	%{!?with_static_libs:--disable-static} \
@@ -223,11 +224,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 
-# useless - modules loaded through libgmodule
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/enchant-2/*.la
-%if %{with static_libs}
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/enchant-2/*.a
-%endif
 # HTML version of man pages
 %{__rm} $RPM_BUILD_ROOT%{_docdir}/enchant/enchant*.html
 
@@ -239,11 +235,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS HACKING NEWS README.md
+%doc AUTHORS HACKING NEWS README
 %attr(755,root,root) %{_bindir}/enchant-2
 %attr(755,root,root) %{_bindir}/enchant-lsmod-2
-%attr(755,root,root) %{_libdir}/libenchant-2.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libenchant-2.so.2
+%{_libdir}/libenchant-2.so.*.*.*
+%ghost %{_libdir}/libenchant-2.so.2
 %dir %{_libdir}/enchant-2
 %{_datadir}/enchant-2
 %{_mandir}/man1/enchant-2.1*
@@ -252,7 +248,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libenchant-2.so
+%{_libdir}/libenchant-2.so
 %{_includedir}/enchant-2
 %{_pkgconfigdir}/enchant-2.pc
 
@@ -268,24 +264,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %files aspell
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant-2/enchant_aspell.so
+%{_libdir}/enchant-2/enchant_aspell.so
 
 %files hspell
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant-2/enchant_hspell.so
+%{_libdir}/enchant-2/enchant_hspell.so
 
 %files hunspell
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant-2/enchant_hunspell.so
+%{_libdir}/enchant-2/enchant_hunspell.so
 
 %files nuspell
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant-2/enchant_nuspell.so
+%{_libdir}/enchant-2/enchant_nuspell.so
 
 %files voikko
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant-2/enchant_voikko.so
+%{_libdir}/enchant-2/enchant_voikko.so
 
 %files zemberek
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/enchant-2/enchant_zemberek.so
+%{_libdir}/enchant-2/enchant_zemberek.so

@@ -1,0 +1,11 @@
+--- enchant-2.8.21/providers/enchant_zemberek.cpp.orig	2025-07-29 13:38:09.000000000 +0200
++++ enchant-2.8.21/providers/enchant_zemberek.cpp	2026-11-24 20:22:27.633086996 +0100
+@@ -233,7 +233,7 @@ zemberek_provider_list_dicts (EnchantPro
+     }
+ }
+ 
+-static
++static void
+ zemberek_provider_dispose (EnchantProvider * me _GL_UNUSED)
+ {
+ 	provider = NULL;
